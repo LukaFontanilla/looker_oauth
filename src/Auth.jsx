@@ -38,18 +38,18 @@ async function redeem_auth_code(location) {
   }
   sessionStorage.removeItem("code_verifier");
   console.log(`removed ${code_verifier} from sessionstorage`);
-  const response = await fetch("https://hack.looker.com:19999/api/token", {
+  const response = await fetch("https://dcl.dev.looker.com:19999/api/token", {
     // This is the URL of your Looker instance's API web service
     method: "POST",
     mode: "cors", // This line is required so that the browser will attempt a CORS request.
     body: JSON.stringify({
       grant_type: "authorization_code",
-      client_id: "lookerbutton",
-      redirect_uri: "https://25vio.csb.app/auth",
+      client_id: "luka-glorious-oauth",
+      redirect_uri: "https://wmjuj.csb.app/auth/",
       code: auth_code,
       code_verifier: code_verifier
     }),
-    credentials: "same-origin",
+    // credentials: "same-origin",
     headers: {
       "Content-Type": "application/json;charset=UTF-8" // This header is required.
     }
@@ -71,5 +71,5 @@ async function redeem_auth_code(location) {
     `Access token expires at ${expires_at.toLocaleTimeString()} local time.`
   );
   console.log(info);
-  window.location.replace("/");
+  window.location.replace("https://wmjuj.csb.app/");
 }
