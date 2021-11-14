@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { BrowserSettings, LookerBrowserSDK } from "@looker/sdk";
-import { BrowserSession, DefaultSettings } from "@looker/sdk-rtl";
-// import { BrowserSession } from "@looker/sdk-rtl";
 import { ComponentsProvider, Button } from "@looker/components";
 
 import { oauth_login } from "./Oauth";
 
 export const AuthButtonStyled = () => {
-  // const [loading, setLoading] = useState(true);
-  // const [auth, setAuth] = useState<BrowserSession>();
-  // const [oldUrl, setOldUrl] = useState<string>();
-  // const history = useHistory();
-
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
@@ -23,8 +15,26 @@ export const AuthButtonStyled = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const { access_token } = JSON.parse(sessionStorage.getItem("access_info"));
+    console.log(sessionStorage.getItem("access_info"));
+    fetch("https://dcl.dev.looker.com:19999/api/4.0/user", {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    })
+      .then((data) => {
+        if (data.status === 200) {
+          return data.json();
+        }
+      })
+      .then((userData) => {
+        console.log(userData);
+      });
+  }, [authed]);
+
   const handleSignIn = () => {
-    oauth_login("hack.looker.com");
+    oauth_login("dcl.dev.looker.com");
   };
 
   return (
@@ -32,7 +42,7 @@ export const AuthButtonStyled = () => {
       <Button size="large" iconBefore="LogoRings" onClick={handleSignIn}>
         {authed ? "Signed In" : "Sign In to Looker"}
       </Button>
-      {authed ? "https://hack.looker.com" : ""}
+      {authed ? "https://dcl.dev.looker.com" : ""}
     </ComponentsProvider>
   );
 };
